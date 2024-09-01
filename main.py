@@ -10,7 +10,7 @@ from globals import *
 pygame.init()
 clock = pygame.time.Clock()
 
-screen = pygame.display.set_mode(size=(SCREEN_WEIGHT, SCREEN_HEIGHT))
+screen = pygame.display.set_mode(size=(SCREEN_WIDTH, SCREEN_HEIGHT))
 
 direction: str
 
@@ -25,12 +25,13 @@ class Game:
         
         self.direction = 'RIGHT'
         self.prev_direction = 'RIGHT'
+        self.score = 0
+    
 
 
     def start(self) -> None:
         run = True
         while run:
-
             clock.tick(FPS)
             pygame.display.set_caption(title="Snake - FPS: {}".format(int(clock.get_fps())))
 
@@ -66,15 +67,19 @@ class Game:
             #print(self._snake.coordinates)
 
             if self._checker.check_collision_with_self() or self._checker.check_collision_with_wall():
+                self.score = 0
                 self._snake.coordinates = np.array([[np.random.randint(0, ROWS - 1), np.random.randint(0, COLUMNS - 1)]])
                 self.direction = np.random.choice(['RIGHT', 'LEFT', 'UP', 'DOWN'])
             
             if self._checker.check_collision_with_fruit():
+                self.score += 1
                 self._snake.grow()
                 self._fruit.respawn(snake=self._snake.coordinates)
 
             screen.fill(color=COLORS['BLACK'])
-            self._draw.draw_screen(self._snake.coordinates, self._fruit.position)
+
+            self._draw.draw_game_screen(self._snake.coordinates, self._fruit.position)
+            self._draw.draw_score(self.score)
             pygame.display.update()
 
 

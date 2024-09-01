@@ -62,24 +62,20 @@ class Game:
                 self.direction = 'DOWN'
                 print(self.direction, self.prev_direction)
 
-            print(self._snake.coordinates)
+            self._snake.move(direction=self.direction, prev_direction=self.prev_direction)
+            #print(self._snake.coordinates)
 
             if self._checker.check_collision_with_self() or self._checker.check_collision_with_wall():
                 self._snake.coordinates = np.array([[np.random.randint(0, ROWS - 1), np.random.randint(0, COLUMNS - 1)]])
+                self.direction = np.random.choice(['RIGHT', 'LEFT', 'UP', 'DOWN'])
             
             if self._checker.check_collision_with_fruit():
                 self._snake.grow()
                 self._fruit.respawn(snake=self._snake.coordinates)
-            self._snake.move(direction=self.direction, prev_direction=self.prev_direction)
-
-            
-            
-                
 
             screen.fill(color=COLORS['BLACK'])
             self._draw.draw_screen(self._snake.coordinates, self._fruit.position)
             pygame.display.update()
-            print('----------------------------')
 
 
 if __name__ == "__main__":

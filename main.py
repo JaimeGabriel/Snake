@@ -67,6 +67,7 @@ class Game:
 
             if self._checker.check_collision_with_self() or self._checker.check_collision_with_wall():
                 self._snake.coordinates = np.array([[np.random.randint(0, ROWS - 1), np.random.randint(0, COLUMNS - 1)]])
+                self.direction = np.random.choice(['RIGHT', 'LEFT', 'UP', 'DOWN'])
             
             if self._checker.check_collision_with_fruit():
                 self._snake.grow()

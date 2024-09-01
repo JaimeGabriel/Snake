@@ -7,7 +7,6 @@ from fruit import Fruit
 class Checker(Snake, Fruit):
 
     def __init__(self, snake: Snake, fruit: Fruit) -> None:
-        # Store references to snake and fruit objects
         self.snake = snake
         self.fruit = fruit
 

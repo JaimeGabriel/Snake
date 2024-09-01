@@ -76,7 +76,6 @@ class Game:
             screen.fill(color=COLORS['BLACK'])
             self._draw.draw_screen(self._snake.coordinates, self._fruit.position)
             pygame.display.update()
-            print('----------------------------')
 
 
 if __name__ == "__main__":

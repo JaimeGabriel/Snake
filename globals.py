@@ -3,14 +3,16 @@ import pygame
 
 SCREEN_WEIGHT = 800
 SCREEN_HEIGHT = 800
-FPS = 5
 
-ROWS = 20
-COLUMNS = 20
+GAME_WEIGHT = 500
+GAME_WEIGHT = 700
+
+FPS = 20
+
+ROWS = 100
+COLUMNS = 100
 
 CELLSIZE = SCREEN_HEIGHT // ROWS
-
-
 
 screen = pygame.display.set_mode(size=(SCREEN_WEIGHT, SCREEN_HEIGHT))
 

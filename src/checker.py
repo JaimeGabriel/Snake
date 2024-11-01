@@ -7,7 +7,6 @@ from fruit import Fruit
 class Checker(Snake, Fruit):
 
     def __init__(self, snake: Snake, fruit: Fruit) -> None:
-        # Store references to snake and fruit objects
         self.snake = snake
         self.fruit = fruit
 
@@ -24,8 +23,9 @@ class Checker(Snake, Fruit):
                 return True
         return False
     
-    def check_collision_with_wall(self) -> bool:
-        if self.snake.coordinates[0, 0] < 0 or self.snake.coordinates[0, 0] == COLUMNS or self.snake.coordinates[0, 1] < 0 or self.snake.coordinates[0, 1] == ROWS:
+    def check_collision_with_wall(self, direction) -> bool:
+        if (self.snake.coordinates[0, 1] == 0 and direction == 'LEFT') or (self.snake.coordinates[0, 1] == COLUMNS - 1 and direction == 'RIGHT') or (self.snake.coordinates[0, 0] == 0 and direction == 'UP') or (self.snake.coordinates[0, 0] == ROWS - 1 and direction == 'DOWN'):
+            print('collision')
             return True
         return False
 

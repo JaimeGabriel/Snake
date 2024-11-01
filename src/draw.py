@@ -43,7 +43,7 @@ class Draw:
 
         font = pygame.font.SysFont('Arial', 24)  
         text_player_score = font.render("Score: " + str(score), True, COLORS['WHITE'])
-        screen.blit(text_player_score, [game_x + 1.12 * COLUMNS * CELLSIZE, game_y])
+        screen.blit(text_player_score, [game_x + 1.12 * COLUMNS * CELLSIZE, game_y*1.1])
 
     def draw_ascii_art(self) -> None:
 

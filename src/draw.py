@@ -35,8 +35,13 @@ class Draw:
 
     def draw_score_frame(self) -> None:
 
-        pygame.draw.rect(screen, COLORS['WHITE'], (game_x + 1.1  * COLUMNS * CELLSIZE, game_y - 5, GAME_WIDTH + 2 * self.game_screen_white_border, GAME_HEIGHT // 2 + 2 * self.game_screen_white_border))  
-        pygame.draw.rect(screen, COLORS['BLACK'], (game_x + 1.11 * COLUMNS * CELLSIZE, game_y, GAME_WIDTH, GAME_HEIGHT // 2))
+        pygame.draw.rect(surface=screen, color=COLORS['WHITE'], 
+                         rect=(game_x + 1.1  * COLUMNS * CELLSIZE, 
+                               game_y - 5, 
+                               GAME_WIDTH * 0.85, 
+                               GAME_HEIGHT // 2 + 2 * self.game_screen_white_border), 
+                         width = 2)  
+        #pygame.draw.rect(screen, COLORS['BLACK'], (game_x + 1.11 * COLUMNS * CELLSIZE, game_y, GAME_WIDTH, GAME_HEIGHT // 2))
 
 
     def draw_live_score(self, score) -> None:
@@ -81,3 +86,19 @@ class Draw:
         font = pygame.font.SysFont('Arial', 24)  
         text_player_score = font.render("New Best Score!", True, COLORS['WHITE'])
         screen.blit(text_player_score, [game_x + 1.12 * COLUMNS * CELLSIZE, game_y])
+
+    def pause_menu(self) -> None:
+
+                             
+        pygame.draw.rect(surface=screen, color=COLORS['RED'], 
+                         rect=(game_x + 1.1  * COLUMNS * CELLSIZE, 
+                               game_y - 5, 
+                               GAME_WIDTH * 0.85, 
+                               GAME_HEIGHT // 2 + 2 * self.game_screen_white_border), 
+                         width = 2)  
+
+        
+        
+        font = pygame.font.SysFont('Arial', 24)  
+        text_pause = font.render("Paused", True, COLORS['RED'])
+        screen.blit(text_pause, [game_x + 1.12 * COLUMNS * CELLSIZE, game_y + 200 + 20*(5+1)])

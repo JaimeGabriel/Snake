@@ -28,6 +28,9 @@ class Checker(Snake, Fruit):
             print('collision')
             return True
         return False
+    
+    
+
 
         
 

@@ -29,6 +29,10 @@ class Checker(Snake, Fruit):
             return True
         return False
     
+                
+                
+    
+
     
 
 

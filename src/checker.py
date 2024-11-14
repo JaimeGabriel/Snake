@@ -1,6 +1,4 @@
 from globals import *
-import pygame
-import numpy as np
 from snake import Snake
 from fruit import Fruit
 
@@ -12,8 +10,6 @@ class Checker(Snake, Fruit):
 
     def check_collision_with_fruit(self) -> bool:
         if self.snake.coordinates[0, 0] == self.fruit.position[0] and self.snake.coordinates[0, 1] == self.fruit.position[1]:
-            print('collision')
-
             return True
         return False
     
@@ -24,8 +20,11 @@ class Checker(Snake, Fruit):
         return False
     
     def check_collision_with_wall(self, direction) -> bool:
-        if (self.snake.coordinates[0, 1] == 0 and direction == 'LEFT') or (self.snake.coordinates[0, 1] == COLUMNS - 1 and direction == 'RIGHT') or (self.snake.coordinates[0, 0] == 0 and direction == 'UP') or (self.snake.coordinates[0, 0] == ROWS - 1 and direction == 'DOWN'):
-            print('collision')
+        if (self.snake.coordinates[0, 1] == 0 and direction == 'LEFT') \
+            or (self.snake.coordinates[0, 1] == COLUMNS - 1 and direction == 'RIGHT') \
+            or (self.snake.coordinates[0, 0] == 0 and direction == 'UP') \
+            or (self.snake.coordinates[0, 0] == ROWS - 1 and direction == 'DOWN'):
+
             return True
         return False
     

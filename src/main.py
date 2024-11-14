@@ -7,13 +7,12 @@ from snake import Snake
 from checker import Checker
 from fruit import Fruit
 from globals import *
+from read import Read
 
 
 pygame.init()
-
 clock = pygame.time.Clock()
 
-screen = pygame.display.set_mode(size=(SCREEN_WIDTH, SCREEN_HEIGHT))
 
 direction: str
 
@@ -24,47 +23,64 @@ class Game:
         self._move = Move()
         self._snake = Snake()
         self._fruit = Fruit()
+        self._read = Read()
         self._checker = Checker(self._snake, self._fruit)
-        
         
         self.pause = False
         self.frame_counter = 0
-        self.direction = 'RIGHT'
-        self.prev_direction = 'RIGHT'
+        self.direction = np.random.choice(['RIGHT', 'LEFT', 'UP', 'DOWN'])
+        self.prev_direction = np.random.choice(['RIGHT', 'LEFT', 'UP', 'DOWN'])
         self.score = 0
         self.player_name = ''
         self.save_score = True
-        self.read_top_scores = True
-        self.top_scores_list = self._draw.read_top_scores('player_data/top_scores.csv')
-
-
+        self.read_top_scores_bool = True
+        self.top_scores_list = self._read.read_top_scores('player_data/top_scores.csv')
         self.best_score = self.top_scores_list[-1][1]
     
+
+    def reset_game_state(self) -> None:
+        """
+        Reset score, snake coordinates and snake direction
+        """
+        self.score = 0
+        self._snake.coordinates = np.array([[np.random.randint(0, ROWS - 1), \
+                                                    np.random.randint(0, COLUMNS - 1)]])
+        self.direction = np.random.choice(['RIGHT', 'LEFT', 'UP', 'DOWN'])
+        self.prev_direction = np.random.choice(['RIGHT', 'LEFT', 'UP', 'DOWN'])
 
 
     def start(self) -> None:
         run = True
         
         while run:
+            # We use the frame counter to get higher inputs per second from the user without having to use high FPS
             self.frame_counter += 1
             if self.frame_counter > 1000:
                 self.frame_counter = 0
-            clock.tick(HZ_GAME)
-            pygame.display.set_caption(title=f'Snake. Hz: {int(clock.get_fps())}/{HZ_GAME}. FPS: {int(clock.get_fps()/HZ_FPS_RATIO)}/{FPS}')
-            for event in pygame.event.get():
 
+            # Window title
+            clock.tick(HZ_GAME)
+            title = f'Snake. Hz: {int(clock.get_fps())}/{HZ_GAME}. \
+                FPS: {int(clock.get_fps()/HZ_FPS_RATIO)}/{FPS}'
+            pygame.display.set_caption(title=title)
+
+
+            for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    # If the x button is pressed, end the game
                     run = False
 
-                if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_SPACE:  # Example for the SPACE key
+                elif event.type == pygame.KEYUP:
+                    # If space is pressed, toggle the pause state
+                    if event.key == pygame.K_SPACE:
                         self.pause = not self.pause
 
-            if self.pause == False:
+            keys = pygame.key.get_pressed()
 
-                keys = pygame.key.get_pressed()
+            if not self.pause:
+                
 
-                # Movimiento del rectángulo basado en las teclas presionadas
+                # Movement of the snake
                 if keys[pygame.K_RIGHT] and self.direction != 'LEFT':
                     self.prev_direction = self.direction
                     self.direction = 'RIGHT'
@@ -82,23 +98,29 @@ class Game:
                     self.direction = 'DOWN'    
 
 
-
+                # Check for collisions and move the snake. This is only made 1/HZ_FPS_RATIO os the total updates
                 if self.frame_counter % HZ_FPS_RATIO == 0:
-                    if self._checker.check_collision_with_self() or self._checker.check_collision_with_wall(self.direction):
-                        if self.score > self.best_score and input("Save score? (y/n): ").capitalize() == 'Y':
-                            self.read_top_scores = True
-                            with open('player_data/top_scores.csv', 'a', newline='') as file:
-                                if self.player_name == '':
-                                    self.player_name = input("Enter your name: ")
-                                
-                                writer = csv.writer(file)
-                                writer.writerow([self.player_name, self.score, date.today()])
+                    # Check for collision with self or wall
+                    if self._checker.check_collision_with_self() or \
+                        self._checker.check_collision_with_wall(self.direction):
+                        # Draw 'game over' screen if a new top 3 score is achieved
+                        if self.score > self.best_score:
+                            self._draw.draw_game_over_screen()
+                            pygame.display.update()
+                            # Ask to save the score
+                            if input("Save score? (y/n): ").capitalize() == 'Y':
+                                self.read_top_scores = True
+                                with open('player_data/top_scores.csv', 'a', newline='') as file:
+                                    if self.player_name == '':
+                                        self.player_name = input("Enter your name: ")
+                                    
+                                    writer = csv.writer(file)
+                                    writer.writerow([self.player_name, self.score, date.today()])
 
-
-                        self.score = 0
-                        self._snake.coordinates = np.array([[np.random.randint(0, ROWS - 1), np.random.randint(0, COLUMNS - 1)]])
-                        self.direction = np.random.choice(['RIGHT', 'LEFT', 'UP', 'DOWN'])
+                        # Reset game state
+                        self.reset_game_state()
                     
+                    # Check for collision with fruit
                     if self._checker.check_collision_with_fruit():
                         self.score += 1
                         self._snake.grow()
@@ -106,48 +128,17 @@ class Game:
 
                     self._snake.move(direction=self.direction, prev_direction=self.prev_direction)
 
-                    screen.fill(color=COLORS['BLACK'])
-
-                    self._draw.draw_game_screen(self._snake.coordinates, self._fruit.position)
-                    self._draw.draw_score_frame()
-                    self._draw.draw_live_score(self.score)
-                    self._draw.draw_ascii_art()
-                    if self.read_top_scores:
-                        self.top_scores_list = self._draw.read_top_scores('player_data/top_scores.csv')
-                    self._draw.draw_top_scores(self.top_scores_list)
-                    self.read_top_scores = False
+                    # Draw and update the game screen
+                    self._read.draw_game_screen(self._snake.coordinates, \
+                                                self._fruit.position, self.score)
                     pygame.display.update()
 
+            elif self.pause == True:                
 
-                first_time = True
-
-            elif self.pause == True:
-
-                
-                keys = pygame.key.get_pressed()
-
-                screen.fill(color=COLORS['BLACK'])
-
-                self._draw.draw_game_screen(self._snake.coordinates, self._fruit.position)
-                self._draw.draw_score_frame()
-                self._draw.draw_live_score(self.score)
-                self._draw.draw_ascii_art()
-                self._draw.draw_top_scores(self.top_scores_list)
-                self.read_top_scores = False
-                self._draw.pause_menu()
+                # Draw and update the game screen
+                self._read.draw_game_screen(self._snake.coordinates, \
+                                            self._fruit.position, self.score)
                 pygame.display.update()
-                
-
-                # if first_time:
-                #     prev_pressed = True
-                #     first_time = False
-                # prev_pressed, action_performed = self._checker.check_exit_pause('SPACE', 
-                #                                                                          keys, 
-                #                                                                          prev_pressed)
-
-                # if action_performed:
-                    
-                #     self.pause = False
 
 
 if __name__ == "__main__":

@@ -1,4 +1,3 @@
-from email import header
 import pygame
 import pandas as pd
 from globals import *
@@ -74,7 +73,7 @@ class Draw:
 
 
         for i in range(len(top_scores_list)):
-            score_surface = font_scores.render(f"{top_scores_list[i][0]}    {top_scores_list[i][1]}    {top_scores_list[i][2]}", True, COLORS['WHITE'])
+            score_surface = font_scores.render(f"{top_scores_list[i][0]}    {top_scores_list[i][1]}", True, COLORS['WHITE'])
             screen.blit(score_surface, (game_x + 1.12 * COLUMNS * CELLSIZE, game_y + 200 + 20*(i+1)))
 
         # for i, row in enumerate(top_scores_list.splitlines()):
@@ -90,7 +89,8 @@ class Draw:
     def pause_menu(self) -> None:
 
                              
-        pygame.draw.rect(surface=screen, color=COLORS['RED'], 
+        pygame.draw.rect(surface=screen, 
+                         color=COLORS['RED'], 
                          rect=(game_x + 1.1  * COLUMNS * CELLSIZE, 
                                game_y - 5, 
                                GAME_WIDTH * 0.85, 
@@ -102,3 +102,20 @@ class Draw:
         font = pygame.font.SysFont('Arial', 24)  
         text_pause = font.render("Paused", True, COLORS['RED'])
         screen.blit(text_pause, [game_x + 1.12 * COLUMNS * CELLSIZE, game_y + 200 + 20*(5+1)])
+
+
+    def draw_game_over_screen(self) -> None:
+
+        pygame.draw.rect(surface=screen, color=COLORS['GREEN'], 
+                         rect=(game_x + 1.1  * COLUMNS * CELLSIZE, 
+                               game_y - 5, 
+                               GAME_WIDTH * 0.85, 
+                               GAME_HEIGHT // 2 + 2 * self.game_screen_white_border), 
+                         width = 2)  
+        
+        font = pygame.font.SysFont('Arial', 24)  
+        message = ['Congratulations!', 'You got a top 3 score!', 'Look at the terminal']
+        for i, line in enumerate(message):
+            text_game_over = font.render(line, True, COLORS['GREEN'])
+            screen.blit(text_game_over, [game_x + 1.12 * COLUMNS * CELLSIZE, game_y + 150 + 30*(5+i)])
+        

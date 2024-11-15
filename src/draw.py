@@ -1,12 +1,13 @@
 import pygame
 import pandas as pd
 from globals import *
+from read import Read
 
 class Draw:
 
     def __init__(self) -> None:
         self.game_screen_white_border = 5
-        pass
+        self._read = Read()
 
     def draw_game_screen(self, snake, fruit) -> None:  
         matrix = np.zeros((ROWS, COLUMNS))
@@ -118,4 +119,18 @@ class Draw:
         for i, line in enumerate(message):
             text_game_over = font.render(line, True, COLORS['GREEN'])
             screen.blit(text_game_over, [game_x + 1.12 * COLUMNS * CELLSIZE, game_y + 150 + 30*(5+i)])
+
+
+    def draw_screen_elements(self, snake_coordinates, fruit_position, score):
+        """"Draw all elements on the game screen"""
+
+        screen.fill(color=COLORS['BLACK'])
+        self.draw_game_screen(snake_coordinates, fruit_position)
+        self.draw_score_frame()
+        self.draw_live_score(score)
+        self.draw_ascii_art()
+        if self.read_top_scores:
+            self.top_scores_list = self._read.read_top_scores('player_data/top_scores.csv')
+        self.draw_top_scores(self.top_scores_list)
+        self.read_top_scores_bool = False
         

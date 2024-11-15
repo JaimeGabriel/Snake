@@ -129,14 +129,14 @@ class Game:
                     self._snake.move(direction=self.direction, prev_direction=self.prev_direction)
 
                     # Draw and update the game screen
-                    self._read.draw_game_screen(self._snake.coordinates, \
+                    self._draw.draw_screen_elements(self._snake.coordinates, \
                                                 self._fruit.position, self.score)
                     pygame.display.update()
 
             elif self.pause == True:                
 
                 # Draw and update the game screen
-                self._read.draw_game_screen(self._snake.coordinates, \
+                self._draw.draw_screen_elements(self._snake.coordinates, \
                                             self._fruit.position, self.score)
                 pygame.display.update()
 

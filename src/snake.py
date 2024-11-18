@@ -1,5 +1,6 @@
 from globals import *
 import pygame
+import numpy as np
 
 class Snake:
 
@@ -10,8 +11,17 @@ class Snake:
                                      )
         
 
-    def move(self,direction, prev_direction) -> None:
+    def move(self, direction, prev_direction) -> None:
+        """
+        Updates the coordinates of the snake according to the given direction.
 
+        Args:
+            direction (str): The direction the snake is moving.
+            prev_direction (str): The previous direction the snake was moving.
+
+        Returns:
+            None
+        """
         if direction == 'RIGHT' and prev_direction != 'LEFT' and self.coordinates[0, 1] < COLUMNS - 1:
             snake_copy = self.coordinates.copy()
             self.coordinates[0, 1] += 1

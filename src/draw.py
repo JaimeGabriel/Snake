@@ -1,5 +1,7 @@
 import pygame
 import pandas as pd
+import numpy as np
+
 from globals import *
 from read import Read
 
@@ -9,46 +11,63 @@ class Draw:
         self.game_screen_white_border = 5
         self._read = Read()
 
-    def draw_game_screen(self, snake, fruit) -> None:  
-        matrix = np.zeros((ROWS, COLUMNS))
-        matrix[fruit[0], fruit[1]] = 2
-        matrix[snake[:, 0], snake[:, 1]] = 1
+    def draw_game_elements(self, snake, fruit) -> None:  
+        """
+        Draw the game elements, including the game screen border, the fruit and the snake.
 
-        pygame.draw.rect(screen, COLORS['WHITE'], (game_x - self.game_screen_white_border, game_y - self.game_screen_white_border , GAME_WIDTH + 2 * self.game_screen_white_border , GAME_HEIGHT + 2 * self.game_screen_white_border))  # Para el marco
- 
-        for row in range(ROWS):
-            for col in range(COLUMNS):
-                color = COLORS['GREEN'] if matrix[row][col] == 1 else COLORS['RED'] if matrix[row][col] == 2 else COLORS['BLACK']
-                pygame.draw.rect(screen, color, (game_x + col * CELLSIZE, game_y + row * CELLSIZE, CELLSIZE, CELLSIZE), width = 2 if color==COLORS['GREEN'] else 0)
-
-
-    # def draw_live_score(self, score, filename_top_scores, read_top_scores) -> None:
-
-    #     self._draw_score_frame()
-    #     self._draw_live_score(score)
-    #     self._draw_ascii_art()
-    #     if read_top_scores:
-    #         top_scores_list = self._read_top_scores(filename_top_scores)
-    #         print("read")
-    #     self._draw_top_scores(filename_top_scores, top_scores_list)
+        Args:
+            snake (list of lists): The coordinates of the snake's cells.
+            fruit (list): The coordinates of the fruit.
+        """
+        # Game screen border
+        pygame.draw.rect(surface=screen, 
+                         color=COLORS['WHITE'], 
+                         rect=(game_x, 
+                               game_y, 
+                               GAME_WIDTH, 
+                               GAME_HEIGHT),
+                         width = 2
+                        )  
         
+        # Fruit
+        pygame.draw.rect(surface=screen, 
+                            color=COLORS['RED'], 
+                            rect=(game_x + fruit[1] * CELLSIZE, 
+                                game_y + fruit[0] * CELLSIZE, 
+                                CELLSIZE, 
+                                CELLSIZE), 
+                            width = 2
+                            )
+
+        # Snake
+        for cell in snake:
+            pygame.draw.rect(surface=screen, 
+                             color=COLORS['GREEN'], 
+                             rect=(game_x + cell[1] * CELLSIZE, 
+                                   game_y + cell[0] * CELLSIZE, 
+                                   CELLSIZE, 
+                                   CELLSIZE), 
+                             width = 2
+                             )
+ 
 
     def draw_score_frame(self) -> None:
 
         pygame.draw.rect(surface=screen, color=COLORS['WHITE'], 
-                         rect=(game_x + 1.1  * COLUMNS * CELLSIZE, 
-                               game_y - 5, 
-                               GAME_WIDTH * 0.85, 
-                               GAME_HEIGHT // 2 + 2 * self.game_screen_white_border), 
+                         rect=(game_x + BLANK_HORIZONTAL_SPACE + GAME_WIDTH, 
+                               game_y, 
+                               SCORE_SCREEN_WIDTH, 
+                               SCORE_SCREEN_HEIGHT), 
                          width = 2)  
-        #pygame.draw.rect(screen, COLORS['BLACK'], (game_x + 1.11 * COLUMNS * CELLSIZE, game_y, GAME_WIDTH, GAME_HEIGHT // 2))
 
 
     def draw_live_score(self, score) -> None:
 
         font = pygame.font.SysFont('Arial', 24)  
         text_player_score = font.render("Score: " + str(score), True, COLORS['WHITE'])
-        screen.blit(text_player_score, [game_x + 1.12 * COLUMNS * CELLSIZE, game_y*1.1])
+        screen.blit(text_player_score, 
+                    [game_x + 2*BLANK_HORIZONTAL_SPACE + GAME_WIDTH, 
+                        game_y + BLANK_VERTICAL_SPACE])
 
     def draw_ascii_art(self) -> None:
 
@@ -56,7 +75,9 @@ class Draw:
         lines = ASCII_ART.splitlines()
         for i, line in enumerate(lines):
             text_surface = font2.render(line, True, COLORS['WHITE'])
-            screen.blit(text_surface, (game_x + 1.12 * COLUMNS * CELLSIZE, 2*game_y + i * 15))  
+            screen.blit(text_surface, 
+                        (game_x + 2*BLANK_HORIZONTAL_SPACE + GAME_WIDTH, 
+                                       game_y + 2*BLANK_VERTICAL_SPACE + i * PIXELS_LINE_BREAK))  
 
     def read_top_scores(self, filename_top_scores) -> tuple[list, list]:
         
@@ -67,10 +88,10 @@ class Draw:
     def draw_top_scores(self, top_scores_list) -> None:
 
         font_scores = pygame.font.SysFont('Arial', 18)
-
-        top_scores_header = top_scores_list[0]
         header_surface = font_scores.render(f"Top Scores:", True, COLORS['WHITE'])
-        screen.blit(header_surface, (game_x + 1.12 * COLUMNS * CELLSIZE, game_y + 200))
+        screen.blit(header_surface, 
+                    (game_x + 2*BLANK_HORIZONTAL_SPACE + GAME_WIDTH, 
+                                     game_y + 3*BLANK_VERTICAL_SPACE))
 
 
         for i in range(len(top_scores_list)):
@@ -125,7 +146,7 @@ class Draw:
         """"Draw all elements on the game screen"""
 
         screen.fill(color=COLORS['BLACK'])
-        self.draw_game_screen(snake_coordinates, fruit_position)
+        self.draw_game_elements(snake_coordinates, fruit_position)
         self.draw_score_frame()
         self.draw_live_score(score)
         self.draw_ascii_art()

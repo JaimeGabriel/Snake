@@ -1,13 +1,15 @@
 from datetime import date
 import pygame
 import csv
+import numpy as np
+
 from draw import Draw
-from move import Move
 from snake import Snake
 from checker import Checker
 from fruit import Fruit
 from globals import *
 from read import Read
+
 
 
 pygame.init()
@@ -20,7 +22,6 @@ class Game:
 
     def __init__(self) -> None:
         self._draw = Draw()
-        self._move = Move()
         self._snake = Snake()
         self._fruit = Fruit()
         self._read = Read()
@@ -32,8 +33,6 @@ class Game:
         self.prev_direction = np.random.choice(['RIGHT', 'LEFT', 'UP', 'DOWN'])
         self.score = 0
         self.player_name = ''
-        self.save_score = True
-        self.read_top_scores_bool = True
         self.top_scores_list = self._read.read_top_scores('player_data/top_scores.csv')
         self.best_score = self.top_scores_list[-1][1]
     
@@ -101,21 +100,20 @@ class Game:
                 # Check for collisions and move the snake. This is only made 1/HZ_FPS_RATIO os the total updates
                 if self.frame_counter % HZ_FPS_RATIO == 0:
                     # Check for collision with self or wall
-                    if self._checker.check_collision_with_self() or \
-                        self._checker.check_collision_with_wall(self.direction):
+                    if self._checker.check_collision(self.direction):
                         # Draw 'game over' screen if a new top 3 score is achieved
                         if self.score > self.best_score:
                             self._draw.draw_game_over_screen()
                             pygame.display.update()
                             # Ask to save the score
                             if input("Save score? (y/n): ").capitalize() == 'Y':
-                                self.read_top_scores = True
                                 with open('player_data/top_scores.csv', 'a', newline='') as file:
                                     if self.player_name == '':
                                         self.player_name = input("Enter your name: ")
                                     
                                     writer = csv.writer(file)
                                     writer.writerow([self.player_name, self.score, date.today()])
+                                    
 
                         # Reset game state
                         self.reset_game_state()

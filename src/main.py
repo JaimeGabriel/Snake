@@ -52,7 +52,7 @@ class Game:
         run = True
         
         while run:
-            # We use the frame counter to get higher inputs per second from the user without having to use high FPS
+            # We use the frame counter to get higher inputs per second from the user without having to use higher FPS
             self.frame_counter += 1
             if self.frame_counter > 1000:
                 self.frame_counter = 0
@@ -113,6 +113,7 @@ class Game:
                                     
                                     writer = csv.writer(file)
                                     writer.writerow([self.player_name, self.score, date.today()])
+                                self.top_scores_list = self._read.read_top_scores('player_data/top_scores.csv')
                                     
 
                         # Reset game state
@@ -127,15 +128,21 @@ class Game:
                     self._snake.move(direction=self.direction, prev_direction=self.prev_direction)
 
                     # Draw and update the game screen
-                    self._draw.draw_screen_elements(self._snake.coordinates, \
-                                                self._fruit.position, self.score)
+                    self._draw.draw_screen_elements(self._snake.coordinates,
+                                                    self._fruit.position, 
+                                                    self.pause,
+                                                    self.score,
+                                                    self.top_scores_list)
                     pygame.display.update()
 
             elif self.pause == True:                
 
                 # Draw and update the game screen
-                self._draw.draw_screen_elements(self._snake.coordinates, \
-                                            self._fruit.position, self.score)
+                self._draw.draw_screen_elements(self._snake.coordinates,
+                                                self._fruit.position, 
+                                                self.pause,
+                                                self.score,
+                                                self.top_scores_list)
                 pygame.display.update()
 
 

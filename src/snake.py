@@ -45,6 +45,10 @@ class Snake:
 
 
     def grow(self) -> None:
+        
+        """
+        Adds a new segment to the snake, extending it by duplicating the last segment.
+        """
         self.coordinates = np.vstack((self.coordinates, self.coordinates[-1]))
 
 

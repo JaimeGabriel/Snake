@@ -16,7 +16,7 @@ class Read():
         Returns:
             tuple[list, list]: The top scores and the names of the players. 
         """
-        
+        print('read')
         top_scores_dataframe = pd.read_csv(filename_top_scores).sort_values(by='score', ascending=False).head(3)
         return top_scores_dataframe.values.tolist()
     

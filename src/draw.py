@@ -40,14 +40,15 @@ class Draw:
                             )
 
         # Snake
-        for cell in snake:
+        for index, cell in enumerate(snake):
+            snake_width = 0 if index == 0 else SNAKE_FRUIT_WIDTH 
             pygame.draw.rect(surface=screen, 
                              color=COLORS['GREEN'], 
                              rect=(game_x + cell[1] * CELLSIZE, 
                                    game_y + cell[0] * CELLSIZE, 
                                    CELLSIZE, 
                                    CELLSIZE), 
-                             width = SNAKE_FRUIT_WIDTH
+                             width = snake_width
                              )
  
 

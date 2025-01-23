@@ -22,10 +22,10 @@ class Draw:
         # Game screen border
         pygame.draw.rect(surface=screen, 
                          color=COLORS['WHITE'], 
-                         rect=(game_x, 
-                               game_y, 
-                               GAME_WIDTH, 
-                               GAME_HEIGHT),
+                         rect=(game_x - SNAKE_FRUIT_WIDTH, 
+                               game_y - SNAKE_FRUIT_WIDTH, 
+                               GAME_WIDTH + 2*SNAKE_FRUIT_WIDTH, 
+                               GAME_HEIGHT + 2*SNAKE_FRUIT_WIDTH),
                          width = GAME_FRAME_WIDTH
                         )  
         

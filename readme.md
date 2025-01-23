@@ -4,7 +4,7 @@ Snake videogame made with pygame.
 
 ![Game screen](image/snake.png)
 
-[Ver el video en YouTube](https://www.youtube.com/watch?v=lkx9tNpzV7c&ab_channel=JaimeGabrielVegas)
+[YouTube video](https://www.youtube.com/watch?v=lkx9tNpzV7c&ab_channel=JaimeGabrielVegas)
 
 ## Install dependencies
 
